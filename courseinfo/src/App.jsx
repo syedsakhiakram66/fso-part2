@@ -7,7 +7,7 @@ const App = () => {
     parts: [
       {
         name: 'Fundamentals of React',
-        exercises: 10
+        exercises: 12
       },
       {
         name: 'Using props to pass data',
