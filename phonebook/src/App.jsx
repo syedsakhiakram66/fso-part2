@@ -1,19 +1,31 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
-  ])
-  const [newName, setNewName] = useState('')
+  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [newName, setNewName] = useState("");
 
   function handleNameChange(event) {
-    setNewName(event.target.value)
+    setNewName(event.target.value);
   }
 
   function addName(event) {
-    event.preventDefault()
-    setPersons([...persons, { name: newName }])
-    setNewName('')
+    event.preventDefault();
+    
+      const name = newName.trim();
+
+      if (!name) return;
+      const exists = persons.some(
+        person => person.name.toLowerCase() == name.toLowerCase()
+      )
+
+      if (exists) {
+        alert(`${name} is already added to phonebook`);
+        return;
+      }
+
+      setPersons([...persons, { name }]);
+      setNewName("");
+    
   }
 
   return (
@@ -30,11 +42,11 @@ const App = () => {
       <h2>Numbers</h2>
       <div>
         {persons.map((person, index) => (
-            <p key={index}>{person.name}</p>
+          <p key={index}>{person.name}</p>
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
