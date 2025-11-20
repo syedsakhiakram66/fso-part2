@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
 const App = () => {
 
@@ -33,7 +36,7 @@ const App = () => {
 
       if (!name) return;
       const exists = persons.some(
-        person => person.name.toLowerCase() == name.toLowerCase()
+        person => person.name.toLowerCase() === name.toLowerCase()
       )
 
       if (exists) {
@@ -55,26 +58,16 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        Filter shown with: <input value={filter} onChange={handleFilterChange} />
-      </div>
-      <form onSubmit={addNameAndNumber}>
-       <h2>add a new</h2>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-          <br />
-          number : <input value={newNumber} onChange={handleNumberChange} required/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter filter={filter} handleFilterChange={handleFilterChange} />
+      <PersonForm
+        newName={newName}
+        newNumber={newNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        addNameAndNumber={addNameAndNumber}
+      />
       <h2>Numbers</h2>
-      <div>
-        {shownPeople.map((person, index) => (
-          <p key={index}>{person.name} {person.number}</p>
-        ))}
-      </div>
+      <Persons persons={shownPeople} />
     </div>
   );
 };
