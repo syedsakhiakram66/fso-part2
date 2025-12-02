@@ -58,7 +58,7 @@ const App = () => {
   const shownPeople = persons.filter((person) =>
     person && typeof person.name === 'string' && person.name.toLowerCase().includes(normalizedFilter)
   );
-  
+  // uh
   useEffect(() => {
   axios.get('http://localhost:3001/persons')
     .then(res => {
