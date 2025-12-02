@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from 'axios'
+import personService from './components/services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -10,8 +10,6 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
 
-
-  
   function handleNumberChange(event) {
     setNewNumber(event.target.value);
   }
@@ -30,6 +28,7 @@ const App = () => {
     const name = newName.trim();
 
     if (!name) return;
+    
     const exists = persons.some(
       (person) => person?.name?.toLowerCase() === name.toLowerCase()
     );
@@ -39,40 +38,31 @@ const App = () => {
       return;
     }
 
- axios.post('http://localhost:3001/persons', { name, number: newNumber })
-    .then(res => {
-      const returned = res.data
-      if (!returned || typeof returned.name !== 'string') {
-        console.warn('POST returned unexpected data:', returned)
-        return
-      }
-      setPersons(prev => prev.concat(returned)) 
+    const personObject = { name, number: newNumber }
 
-      setNewName('')
-      setNewNumber('')
-    })
-    .catch(err => console.error('create failed', err))
+    personService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })
+      .catch(err => console.error('create failed', err))
   }
 
   const normalizedFilter = filter.trim().toLowerCase()
   const shownPeople = persons.filter((person) =>
     person && typeof person.name === 'string' && person.name.toLowerCase().includes(normalizedFilter)
   );
-  // uh
+
   useEffect(() => {
-  axios.get('http://localhost:3001/persons')
-    .then(res => {
-      const data = res.data
-      if (!Array.isArray(data)) {
-        console.warn('GET /persons returned non-array:', data)
-        setPersons([])
-        return
-      }
-      const valid = data.filter(p => p && typeof p.name === 'string')
-      setPersons(valid)
-    })
-    .catch(err => console.error('fetch failed', err))
-}, [])
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
+      .catch(err => console.error('fetch failed', err))
+  }, [])
 
   return (
     <div>
