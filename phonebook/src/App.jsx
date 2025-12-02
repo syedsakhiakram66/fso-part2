@@ -40,7 +40,7 @@ const App = () => {
 
     const personObject = { name, number: newNumber }
 
-    personService
+    personService 
       .create(personObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
@@ -76,7 +76,7 @@ const App = () => {
         addNameAndNumber={addNameAndNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={shownPeople} />
+      <Persons persons={persons} setPersons={setPersons} />
     </div>
   );
 };
